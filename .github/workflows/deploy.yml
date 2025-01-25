@@ -8,6 +8,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -32,4 +33,21 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
+
+      # Upload logs
+      - name: Upload logs
+        run: |
+          mkdir logs
+          echo "Logs uploaded on $(date)" > logs/summary.log
+          tar -czf logs.tar.gz logs
+        continue-on-error: true  # This ensures the pipeline continues even if this step fails
+
+      # Upload the log archive as artifact
+      - name: Upload log archive as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: logs.tar.gz
+
+
 
