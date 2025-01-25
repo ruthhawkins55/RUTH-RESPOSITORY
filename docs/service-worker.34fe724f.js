@@ -1,0 +1,2 @@
+const e=["/RUTH-REPOSITORY/","/RUTH-REPOSITORY /index.html","/RUTH-REPOSITORY /style.css","/RUTH-REPOSITORY/app.js","/RUTH-REPOSITORY /manifest.json","/RUTH-REPOSITORY /icons/icon-128.png","/RUTH-REPOSITORY /icons/icon-512.png"];self.addEventListener("install",R=>{R.waitUntil(caches.open("to-do-pwa-cache-v1").then(R=>R.addAll(e)))}),self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(R=>R||fetch(e.request)))});
+//# sourceMappingURL=service-worker.34fe724f.js.map
