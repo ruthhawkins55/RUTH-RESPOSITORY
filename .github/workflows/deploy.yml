@@ -11,18 +11,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Install Dependencies (if any)
         run: |
           if [ -f package.json ]; then
             npm install
           fi
+
+      - name: Run linting
+        run: npm run lint
+
       - name: Build Project (if any build step exists)
         run: |
           if [ -f package.json ]; then
             npm run build
           fi
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
+
