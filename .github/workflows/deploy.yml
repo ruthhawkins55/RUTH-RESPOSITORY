@@ -42,12 +42,13 @@ jobs:
           tar -czf logs.tar.gz logs
         continue-on-error: true  # This ensures the pipeline continues even if this step fails
 
-      # Upload the log archive as artifact
+      # Upload the log archive as artifact using the latest version (v3)
       - name: Upload log archive as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: logs
           path: logs.tar.gz
+
 
 
 
