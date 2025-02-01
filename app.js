@@ -1,6 +1,11 @@
 // Import Firebase functions
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+// Import loglevel for logging
+import log from 'loglevel';
+
+// Initialize logger with "info" level
+log.setLevel("info");
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -23,11 +28,11 @@ if ('serviceWorker' in navigator) {
     s.register(sw.href, {
         scope: '/RUTH-RESPOSITORY/'  // Change this to match your repo name
     })
-    .then(_ => console.log('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
-    .catch(err => console.error('Service Worker Error:', err));
+    .then(_ => log.info('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
+    .catch(err => log.error('Service Worker Error:', err));
 }
 
-// Add Task functionality
+// DOM Elements
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
@@ -37,8 +42,8 @@ addTaskBtn.addEventListener('click', async () => {
     const task = taskInput.value.trim();
     if (task) {
         const taskText = sanitizeInput(task); // Sanitize the task text before saving
+        log.info(`Attempting to add task: ${taskText}`);  // Log the user action
         await addTaskToFirestore(taskText); // Add sanitized task to Firestore
-        renderTasks(); // Render tasks
         taskInput.value = ''; // Clear the input field
     }
 });
@@ -50,15 +55,62 @@ function sanitizeInput(input) {
     return div.innerHTML; // Returns the sanitized text
 }
 
-// Add task to Firestore
+// Add task to Firestore with error handling
 async function addTaskToFirestore(taskText) {
-    await addDoc(collection(db, "todos"), {
-        text: taskText,
-        completed: false
+    try {
+        await addDoc(collection(db, "todos"), {
+            text: taskText,
+            completed: false,
+        });
+        log.info("Task added successfully!");  // Log success
+    } catch (error) {
+        log.error("Error adding task:", error);  // Log error
+        alert("Failed to add task. Please try again.");
+    }
+}
+
+// Delete task from Firestore
+async function deleteTaskFromFirestore(taskId) {
+    try {
+        await deleteDoc(doc(db, "todos", taskId));
+        log.info(`Task with ID: ${taskId} deleted successfully!`);  // Log success
+    } catch (error) {
+        log.error("Error deleting task:", error);  // Log error
+        alert("Failed to delete task. Please try again.");
+    }
+}
+
+// Add real-time updates for task rendering
+function listenToTaskUpdates() {
+    const todosRef = collection(db, "todos");
+    onSnapshot(todosRef, (snapshot) => {
+        taskList.innerHTML = ""; // Clear existing tasks
+        if (snapshot.empty) {
+            taskList.textContent = "No tasks found.";
+        }
+        snapshot.forEach((doc) => {
+            const task = doc.data();
+            const taskItem = document.createElement("li");
+            taskItem.id = doc.id; // Use Firestore document ID
+            taskItem.textContent = task.text;
+            taskList.appendChild(taskItem);
+        });
     });
 }
 
-// Fetch tasks from Firestore and render them
+// Initialize real-time updates
+listenToTaskUpdates();
+
+// Remove task on click with Firestore deletion
+taskList.addEventListener("click", async (e) => {
+    if (e.target.tagName === "LI") {
+        const taskId = e.target.id;
+        log.info(`Attempting to delete task with ID: ${taskId}`);  // Log user action
+        await deleteTaskFromFirestore(taskId);
+    }
+});
+
+// Fetch tasks from Firestore (if not using real-time updates)
 async function renderTasks() {
     var tasks = await getTasksFromFirestore();
     taskList.innerHTML = ""; // Clear existing tasks
@@ -73,32 +125,32 @@ async function renderTasks() {
     });
 }
 
-// Fetch tasks from Firestore
+// Fetch tasks from Firestore (with error handling)
 async function getTasksFromFirestore() {
-    const data = await getDocs(collection(db, "todos"));
-    let userData = [];
-    data.forEach((doc) => {
-        userData.push(doc);
-    });
-    return userData;
-}
-
-// Remove Task on Click
-taskList.addEventListener('click', (e) => {
-    if (e.target.tagName === 'LI') {
-        e.target.remove();
+    try {
+        const data = await getDocs(collection(db, "todos"));
+        let userData = [];
+        data.forEach((doc) => {
+            userData.push(doc);
+        });
+        return userData;
+    } catch (error) {
+        log.error("Error fetching tasks:", error);  // Log error
+        alert("Failed to load tasks. Please try again.");
+        return [];
     }
-});
+}
 
 // Global error logging
 window.addEventListener('error', function (event) {
-    console.error('Error occurred: ', event.message);
+    log.error('Error occurred: ', event.message);  // Log unhandled errors
 });
 
-// Fetch and render tasks when the app loads
+// Fetch and render tasks when the app loads (if not using real-time updates)
 window.onload = () => {
     renderTasks(); // Fetch and display tasks
 };
+
 
 
 
