@@ -1,5 +1,4 @@
 import globals from 'globals';
-import js from "@eslint/js";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -14,4 +13,7 @@ export default [
     files: ["*.js"],  // Apply these rules to JavaScript files
   },
 ];
+
+
+
 

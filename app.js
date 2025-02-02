@@ -1,6 +1,6 @@
 // Import Firebase functions
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 // Import loglevel for logging
 import log from 'loglevel';
 
@@ -39,12 +39,14 @@ const taskList = document.getElementById('taskList');
 
 // Add Task Event Listener
 addTaskBtn.addEventListener('click', async () => {
-    const task = taskInput.value.trim();
+    const task = taskInput.value.trim(); // Trim whitespace from the input
     if (task) {
         const taskText = sanitizeInput(task); // Sanitize the task text before saving
         log.info(`Attempting to add task: ${taskText}`);  // Log the user action
         await addTaskToFirestore(taskText); // Add sanitized task to Firestore
         taskInput.value = ''; // Clear the input field
+    } else {
+        alert("Please enter a task!"); // Show an error if the task is empty or whitespace
     }
 });
 
@@ -93,6 +95,7 @@ function listenToTaskUpdates() {
             const taskItem = document.createElement("li");
             taskItem.id = doc.id; // Use Firestore document ID
             taskItem.textContent = task.text;
+            taskItem.tabIndex = 0; // Make task item focusable via keyboard
             taskList.appendChild(taskItem);
         });
     });
@@ -120,6 +123,7 @@ async function renderTasks() {
             const taskItem = document.createElement("li");
             taskItem.id = task.id;
             taskItem.textContent = task.data().text;
+            taskItem.tabIndex = 0; // Make task item focusable via keyboard
             taskList.appendChild(taskItem);
         }
     });
@@ -150,6 +154,30 @@ window.addEventListener('error', function (event) {
 window.onload = () => {
     renderTasks(); // Fetch and display tasks
 };
+
+// New Event Listener for Enter key to add task when in the input field
+taskInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        addTaskBtn.click();
+    }
+});
+
+// Event Listener to mark task as completed on "Enter" key press
+taskList.addEventListener("keypress", async function(e) {
+    if (e.target.tagName === 'LI' && e.key === "Enter") {
+        // Mark the task as completed in Firestore
+        await updateDoc(doc(db, "todos", e.target.id), {
+            completed: true
+        });
+        log.info(`Task with ID: ${e.target.id} marked as completed.`);  // Log completion action
+    }
+    // Re-render the tasks to reflect the change
+    renderTasks();
+});
+
+
+
+
 
 
 

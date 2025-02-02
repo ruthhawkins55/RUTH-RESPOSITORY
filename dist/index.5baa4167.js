@@ -7,7 +7,7 @@
 // orig method which is the require for previous bundles
 
 (function (modules, entry, mainEntry, parcelRequireName, globalName) {
-  /* eslint-disable no-undef */
+   
   var globalObject =
     typeof globalThis !== 'undefined'
       ? globalThis
@@ -18,7 +18,7 @@
       : typeof global !== 'undefined'
       ? global
       : {};
-  /* eslint-enable no-undef */
+   
 
   // Save the require from previous bundle to this closure if any
   var previousRequire =
@@ -223,7 +223,7 @@ function getHostname() {
 function getPort() {
     return HMR_PORT || location.port;
 }
-// eslint-disable-next-line no-redeclare
+ 
 var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
     var hostname = getHostname();
@@ -1449,7 +1449,7 @@ function getDbPromise() {
             // behavior is what we want, because if there are multiple versions between
             // the old version and the current version, we want ALL the migrations
             // that correspond to those versions to run, not only the last one.
-            // eslint-disable-next-line default-case
+             
             switch(oldVersion){
                 case 0:
                     try {
@@ -2670,7 +2670,7 @@ const getDefaultsFromCookie = ()=>{
     if (!host) return undefined;
     const separatorIndex = host.lastIndexOf(':'); // Finding the last since IPv6 addr also has colons.
     if (separatorIndex <= 0 || separatorIndex + 1 === host.length) throw new Error(`Invalid host ${host} with no separate hostname and port!`);
-    // eslint-disable-next-line no-restricted-globals
+     
     const port = parseInt(host.substring(separatorIndex + 1), 10);
     if (host[0] === '[') // Bracket-quoted `[ipv6addr]:port` => return "ipv6addr" (without brackets).
     return [
@@ -6045,7 +6045,7 @@ function __PRIVATE_indexOffsetComparator(e, t) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ // References to `window` are guarded by SimpleDb.isAvailable()
-/* eslint-disable no-restricted-globals */ /**
+  /**
  * Wraps an IDBTransaction and exposes a store() method to get a handle to a
  * specific object store.
  */ class __PRIVATE_SimpleDbTransaction {
@@ -17140,7 +17140,7 @@ class __PRIVATE_MemorySharedClientState {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ // References to `window` are guarded by BrowserConnectivityMonitor.isAvailable()
-/* eslint-disable no-restricted-globals */ /**
+  /**
  * Browser implementation of ConnectivityMonitor.
  */ class __PRIVATE_BrowserConnectivityMonitor {
     constructor(){
@@ -17564,12 +17564,12 @@ class __PRIVATE_WebChannelConnection extends /**
  * limitations under the License.
  */ /** The Platform's 'window' implementation or null if not available. */ function __PRIVATE_getWindow() {
     // `window` is not always available, e.g. in ReactNative and WebWorkers.
-    // eslint-disable-next-line no-restricted-globals
+     
     return "undefined" != typeof window ? window : null;
 }
 /** The Platform's 'document' implementation or null if not available. */ function getDocument() {
     // `document` is not always available, e.g. in ReactNative and WebWorkers.
-    // eslint-disable-next-line no-restricted-globals
+     
     return "undefined" != typeof document ? document : null;
 }
 /**
@@ -24549,11 +24549,11 @@ let Fe = null;
  *
  * @author   Feross Aboukhadijeh <https://feross.org>
  * @license  MIT
- */ /* eslint-disable no-proto */ 'use strict';
+ */   'use strict';
 const base64 = require("9c62938f1dccc73c");
 const ieee754 = require("aceacb6a4531a9d2");
-const customInspectSymbol = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' // eslint-disable-line dot-notation
- ? Symbol['for']('nodejs.util.inspect.custom') // eslint-disable-line dot-notation
+const customInspectSymbol = typeof Symbol === 'function' && typeof Symbol['for'] === 'function'  
+ ? Symbol['for']('nodejs.util.inspect.custom')  
  : null;
 exports.Buffer = Buffer;
 exports.SlowBuffer = SlowBuffer;
@@ -25763,7 +25763,7 @@ function E(sym, getMessage, Base) {
             this.name = `${this.name} [${sym}]`;
             // Access the stack to generate the error message including the error code
             // from the name.
-            this.stack // eslint-disable-line no-unused-expressions
+            this.stack  
             ;
             // Reset the name to the actual name.
             delete this.name;
@@ -25947,7 +25947,7 @@ function isInstance(obj, type) {
 }
 function numberIsNaN(obj) {
     // For IE11 support
-    return obj !== obj // eslint-disable-line no-self-compare
+    return obj !== obj  
     ;
 }
 // Create lookup table for `toString('hex')`

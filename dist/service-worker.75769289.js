@@ -7,7 +7,7 @@
 // orig method which is the require for previous bundles
 
 (function (modules, entry, mainEntry, parcelRequireName, globalName) {
-  /* eslint-disable no-undef */
+   
   var globalObject =
     typeof globalThis !== 'undefined'
       ? globalThis
@@ -18,7 +18,7 @@
       : typeof global !== 'undefined'
       ? global
       : {};
-  /* eslint-enable no-undef */
+   
 
   // Save the require from previous bundle to this closure if any
   var previousRequire =
@@ -223,7 +223,7 @@ function getHostname() {
 function getPort() {
     return HMR_PORT || location.port;
 }
-// eslint-disable-next-line no-redeclare
+ 
 var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
     var hostname = getHostname();
