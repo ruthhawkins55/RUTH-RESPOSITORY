@@ -28,7 +28,7 @@ if ('serviceWorker' in navigator) {
     s.register(sw.href, {
         scope: '/RUTH-RESPOSITORY/'  // Change this to match your repo name
     })
-    .then(_ => log.info('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
+    .then(_ => log.info('Service Worker Registered for scope:', sw.href, 'with', import.meta.url)) // eslint-disable-line no-unused-vars
     .catch(err => log.error('Service Worker Error:', err));
 }
 
@@ -174,6 +174,7 @@ taskList.addEventListener("keypress", async function(e) {
     // Re-render the tasks to reflect the change
     renderTasks();
 });
+
 
 
 
